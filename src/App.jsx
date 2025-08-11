@@ -11,27 +11,32 @@ export default function App() {
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={!token ? <LoginRegister /> : <Navigate to="/profile-form" />}
-      />
+      {/* Public routes */}
       <Route
         path="/login"
-        element={<LoginRegister />}
+        element={!token ? <LoginRegister /> : <Navigate to="/profile-form" replace />}
       />
       <Route
+        path="/"
+        element={!token ? <Navigate to="/login" replace /> : <Navigate to="/profile-form" replace />}
+      />
+
+      {/* Protected routes */}
+      <Route
         path="/home"
-        element={token ? <Home /> : <Navigate to="/login" />}
+        element={token ? <Home /> : <Navigate to="/login" replace />}
       />
       <Route
         path="/profile-form"
-        element={token ? <ProfileForm token={token} /> : <Navigate to="/login" />}
+        element={token ? <ProfileForm token={token} /> : <Navigate to="/login" replace />}
       />
       <Route
         path="/profile-preview"
-        element={token ? <ProfilePreview /> : <Navigate to="/login" />}
+        element={token ? <ProfilePreview /> : <Navigate to="/login" replace />}
       />
-      <Route path="*" element={<Navigate to="/" />} />
+
+      {/* Agar koi unknown route ho to */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
