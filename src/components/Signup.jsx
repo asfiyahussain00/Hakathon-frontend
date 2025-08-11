@@ -13,7 +13,7 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const backendURL = "http://localhost:3000";
+  const backendURL = "https://hackathon-backend-cqqf.vercel.app/";
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
