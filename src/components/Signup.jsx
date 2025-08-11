@@ -24,12 +24,6 @@ export default function Signup() {
     setError("");
     setLoading(true);
 
-   
-// Login successful
-localStorage.setItem("token", res.data.token);
-navigate("/profile-form"); // ✅ yahan home ki jagah profile form
-
-
     try {
       if (mode === "register") {
         await axios.post(`${backendURL}/register`, form);
@@ -41,7 +35,7 @@ navigate("/profile-form"); // ✅ yahan home ki jagah profile form
           password: form.password
         });
         localStorage.setItem("token", res.data.token);
-        navigate("/profile-form"); // ✅ Redirect here after login
+        navigate("/profile-form"); // Redirect after login
       }
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong");
@@ -55,7 +49,7 @@ navigate("/profile-form"); // ✅ yahan home ki jagah profile form
       <div>
         <h2>{mode === "login" ? "Login" : "Register"}</h2>
         
-        {error && <p>{error}</p>}
+        {error && <p style={{color: 'red'}}>{error}</p>}
         
         <form onSubmit={submit}>
           {mode === "register" && (
@@ -106,6 +100,7 @@ navigate("/profile-form"); // ✅ yahan home ki jagah profile form
         
         <p 
           onClick={() => setMode(mode === "login" ? "register" : "login")}
+          style={{cursor: 'pointer', color: 'blue', marginTop: '10px'}}
         >
           {mode === "login" ? "Create account" : "Already have account? Login"}
         </p>
