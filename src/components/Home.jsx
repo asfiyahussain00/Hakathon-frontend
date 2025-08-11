@@ -13,13 +13,19 @@ export default function Home() {
   const [newProject, setNewProject] = useState({ title: "", description: "", link: "" });
   const [loading, setLoading] = useState(true);
 
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // clear token
+    navigate("/");                    // redirect to login/register page
+  };
 
   const fetchProfile = () => {
     if (!token) return;
     axios
-      .get("http://localhost:3000/profile", {
+      .get(`${backendURL}/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then((res) => {
@@ -46,7 +52,7 @@ export default function Home() {
 
   const saveProfile = () => {
     axios
-      .post("http://localhost:3000/profile", profile, {
+      .post(`${backendURL}/profile`, profile, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(() => {
@@ -68,60 +74,220 @@ export default function Home() {
     setProfile({ ...profile, projects: updatedProjects });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
-  if (loading) return <p style={{ textAlign: "center" }}>Loading...</p>;
+  if (loading) return <p style={{ textAlign: "center", marginTop: 50, fontSize: 18 }}>Loading...</p>;
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", backgroundColor: "#f5f6fa", minHeight: "100vh" }}>
-      {/* Navbar */}
-      <nav style={{ backgroundColor: "#2c3e50", color: "white", padding: "10px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={{ margin: 0 }}>Portfolio Builder</h2>
-        <button onClick={handleLogout} style={{ background: "#e74c3c", color: "white", border: "none", padding: "8px 16px", borderRadius: "5px", cursor: "pointer" }}>
+    <div style={{ fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", backgroundColor: "#f0f2f5", minHeight: "100vh" }}>
+      {/* Modern Navbar */}
+      <nav style={{
+        backgroundColor: "white",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+        padding: "0 20px",
+        height: "64px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <svg style={{ width: "32px", height: "32px", color: "#6366f1" }} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+          <span style={{
+            marginLeft: "8px",
+            fontSize: "1.25rem",
+            fontWeight: "bold",
+            color: "#1f2937"
+          }}>
+            PortfolioPro
+          </span>
+        </div>
+        <button
+          onClick={handleLogout}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            padding: "6px 12px",
+            border: "none",
+            fontSize: "0.875rem",
+            fontWeight: "500",
+            borderRadius: "6px",
+            color: "white",
+            backgroundColor: "#6366f1",
+            cursor: "pointer",
+            transition: "background-color 0.2s ease",
+            width: "auto",
+            minWidth: "unset",
+          }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#4f46e5"}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#6366f1"}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ width: "20px", height: "20px", marginRight: "8px", flexShrink: 0 }}
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+              clipRule="evenodd"
+            />
+          </svg>
           Logout
         </button>
       </nav>
 
-      <div style={{ display: "flex", gap: "20px", padding: "20px" }}>
+      {/* Cards container with added paddingTop */}
+      <div style={{
+        display: "flex",
+        gap: 30,
+        padding: 30,
+       marginTop:400,// <-- added padding top here
+        maxWidth: 1200,
+       
+      }}>
         {/* Form Section */}
-        <div style={{ flex: 1, background: "white", padding: "20px", borderRadius: "10px", boxShadow: "0px 2px 8px rgba(0,0,0,0.1)" }}>
-          <h3>Edit Profile</h3>
-          <input type="text" name="name" placeholder="Your Name" value={profile.name} onChange={handleChange} style={inputStyle} />
-          <input type="email" name="email" placeholder="Your Email" value={profile.email} onChange={handleChange} style={inputStyle} />
-          <input type="text" name="skills" placeholder="Skills (comma separated)" value={profile.skills} onChange={handleChange} style={inputStyle} />
-          <input type="text" name="github" placeholder="GitHub Link" value={profile.github} onChange={handleChange} style={inputStyle} />
+        <section style={{
+          flex: 1,
+          backgroundColor: "white",
+          borderRadius: 12,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+          padding: 30,
+          minWidth: 320
+        }}>
+          <h2 style={{ marginBottom: 20, color: "#333" }}>Edit Profile</h2>
+          <input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={profile.name}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Your Email"
+            value={profile.email}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <input
+            type="text"
+            name="skills"
+            placeholder="Skills (comma separated)"
+            value={profile.skills}
+            onChange={handleChange}
+            style={inputStyle}
+          />
+          <input
+            type="text"
+            name="github"
+            placeholder="GitHub Link"
+            value={profile.github}
+            onChange={handleChange}
+            style={inputStyle}
+          />
 
-          <h4>Add Project</h4>
-          <input type="text" name="title" placeholder="Project Title" value={newProject.title} onChange={handleProjectChange} style={inputStyle} />
-          <input type="text" name="description" placeholder="Project Description" value={newProject.description} onChange={handleProjectChange} style={inputStyle} />
-          <input type="text" name="link" placeholder="Project Link" value={newProject.link} onChange={handleProjectChange} style={inputStyle} />
+          <h3 style={{ marginTop: 30, marginBottom: 15, color: "#444" }}>Add New Project</h3>
+          <input
+            type="text"
+            name="title"
+            placeholder="Project Title"
+            value={newProject.title}
+            onChange={handleProjectChange}
+            style={inputStyle}
+          />
+          <input
+            type="text"
+            name="description"
+            placeholder="Project Description"
+            value={newProject.description}
+            onChange={handleProjectChange}
+            style={inputStyle}
+          />
+          <input
+            type="text"
+            name="link"
+            placeholder="Project Link"
+            value={newProject.link}
+            onChange={handleProjectChange}
+            style={inputStyle}
+          />
 
-          <button onClick={addProject} style={btnStyle}>Add Project</button>
-          <button onClick={saveProfile} style={{ ...btnStyle, background: "#27ae60" }}>Save Profile</button>
-        </div>
+          <div style={{ marginTop: 15 }}>
+            <button onClick={addProject} style={{ ...btnStyle, backgroundColor: "#0366d6" }}>
+              Add Project
+            </button>
+            <button onClick={saveProfile} style={{ ...btnStyle, backgroundColor: "#28a745" }}>
+              Save Profile
+            </button>
+          </div>
+        </section>
 
         {/* Preview Section */}
-        <div style={{ flex: 1, background: "white", padding: "20px", borderRadius: "10px", boxShadow: "0px 2px 8px rgba(0,0,0,0.1)" }}>
-          <h3>Preview</h3>
-          <p><b>Name:</b> {profile.name}</p>
-          <p><b>Email:</b> {profile.email}</p>
-          <p><b>Skills:</b> {profile.skills}</p>
-          <p><b>GitHub:</b> <a href={profile.github} target="_blank" rel="noreferrer">{profile.github}</a></p>
+        <section style={{
+          flex: 1,
+          backgroundColor: "white",
+          borderRadius: 12,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+          padding: 30,
+          minWidth: 320
+        }}>
+          <h2 style={{ marginBottom: 20, color: "#333" }}>Profile Preview</h2>
+          <p><strong>Name:</strong> {profile.name || <em>Not added</em>}</p>
+          <p><strong>Email:</strong> {profile.email || <em>Not added</em>}</p>
+          <p><strong>Skills:</strong> {profile.skills || <em>Not added</em>}</p>
+          <p>
+            <strong>GitHub:</strong>{" "}
+            {profile.github
+              ? <a href={profile.github} target="_blank" rel="noreferrer" style={{ color: "#0366d6" }}>{profile.github}</a>
+              : <em>Not added</em>
+            }
+          </p>
 
-          <h4>Projects</h4>
-          {profile.projects.length === 0 ? <p>No projects added yet.</p> : profile.projects.map((p, i) => (
-            <div key={i} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "5px", marginBottom: "10px" }}>
-              <p><b>{p.title}</b></p>
-              <p>{p.description}</p>
-              <a href={p.link} target="_blank" rel="noreferrer">{p.link}</a>
-              <br />
-              <button onClick={() => deleteProject(i)} style={{ marginTop: "5px", background: "#c0392b", color: "white", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer" }}>Delete</button>
-            </div>
-          ))}
-        </div>
+          <h3 style={{ marginTop: 30, marginBottom: 15, color: "#444" }}>Projects</h3>
+          {profile.projects.length === 0 ? (
+            <p><em>No projects added yet.</em></p>
+          ) : (
+            profile.projects.map((p, i) => (
+              <div
+                key={i}
+                style={{
+                  border: "1px solid #ddd",
+                  borderRadius: 8,
+                  padding: 15,
+                  marginBottom: 15,
+                  backgroundColor: "#fafafa",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.05)"
+                }}
+              >
+                <h4 style={{ margin: "0 0 10px 0" }}>{p.title}</h4>
+                <p style={{ margin: "0 0 8px 0" }}>{p.description}</p>
+                <a href={p.link} target="_blank" rel="noreferrer" style={{ color: "#0366d6" }}>{p.link}</a>
+                <br />
+                <button
+                  onClick={() => deleteProject(i)}
+                  style={{
+                    marginTop: 10,
+                    backgroundColor: "#d73a49",
+                    color: "white",
+                    border: "none",
+                    padding: "6px 12px",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontWeight: "600"
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            ))
+          )}
+        </section>
       </div>
     </div>
   );
@@ -129,19 +295,24 @@ export default function Home() {
 
 const inputStyle = {
   width: "100%",
-  padding: "10px",
-  margin: "5px 0",
-  borderRadius: "5px",
-  border: "1px solid #ccc"
+  padding: "12px",
+  marginBottom: "15px",
+  borderRadius: "8px",
+  border: "1px solid #ccc",
+  fontSize: "15px",
+  outline: "none",
+  transition: "border-color 0.3s ease",
+  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
 };
 
 const btnStyle = {
-  display: "inline-block",
-  margin: "5px 5px 0 0",
-  padding: "8px 16px",
+  padding: "10px 20px",
+  marginRight: 15,
   border: "none",
-  background: "#2980b9",
+  borderRadius: "8px",
   color: "white",
-  borderRadius: "5px",
-  cursor: "pointer"
+  fontWeight: "700",
+  cursor: "pointer",
+  fontSize: "15px",
+  transition: "background-color 0.3s ease"
 };
