@@ -50,17 +50,68 @@ export default function Home() {
     setNewProject({ ...newProject, [e.target.name]: e.target.value });
   };
 
-  const saveProfile = () => {
-    axios
-      .post(`${backendURL}/profile`, profile, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(() => {
-        fetchProfile();
-        alert("Profile saved & updated!");
-      })
-      .catch((err) => alert(err.response?.data?.error || "Error saving profile"));
+
+
+
+  const handleProfile = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("https://hackathon-backend-cqqf.vercel.app/profile", profile, {
+        headers: { Authorization: `Bearer ${token}` }  // fixed template literal here
+      });
+      alert("Profile saved successfully!");
+    
+    } catch (error) {
+      alert(error.response?.data?.error || "Error saving profile");
+    }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // const saveProfile = () => {
+  //   axios
+  //     .put(`${backendURL}/profile`, profile, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     })
+  //     .then(() => {
+  //       fetchProfile();
+  //       alert("Profile saved & updated!");
+  //     })
+  //     .catch((err) => alert(err.response?.data?.error || "Error saving profile"));
+  // };
 
   const addProject = () => {
     if (!newProject.title) return alert("Project title is required");
@@ -222,7 +273,7 @@ export default function Home() {
             <button onClick={addProject} style={{ ...btnStyle, backgroundColor: "#0366d6" }}>
               Add Project
             </button>
-            <button onClick={saveProfile} style={{ ...btnStyle, backgroundColor: "#28a745" }}>
+            <button onClick={handleProfile} style={{ ...btnStyle, backgroundColor: "#28a745" }}>
               Save Profile
             </button>
           </div>
