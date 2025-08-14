@@ -21,7 +21,7 @@ export default function App() {
       />
       <Route
         path="/"
-        element={!token ? <Navigate to="/login" replace /> : <Navigate to="/profile-form" replace />}
+        element={!token ? <Navigate to="/login" replace /> : <Navigate to="/home" replace />}
       />
 
       {/* Protected routes */}
